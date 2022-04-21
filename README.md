@@ -2,14 +2,6 @@
 
 EthSema is a novel EVM-to-eWASM bytecode translator that can not only ensure the fidelity of translation but also fix commonly-seen vulnerabilities in smart contracts.It is non-trivial to develop ETHSEMA due to the challenges in lifting EVM bytecode to LLVM IR and handling the Ethereum Environment Interfaces (EEI) and Ethereum Contract Interfaces(ECI). 
 
-Since millions of smart contracts have been deployed and running on Ethereum 1.0, it is highly desirable to convert their EVM bytecode to eWASM bytecode automatically to foster the prosperity of Ethereum ecosystem. In particular, the bytecode translator should fulfill the following requirements:
-
-- **R1-Correctness:** it should generate eWASM contracts with consistent behaviors as EVM contracts. 
-- **R2-Compatibility:** the generated eWASM contracts should be compatible with EEI and ECI for successful execution. 
-- **R3-Extensibility:** it should be extensible to support improvements to the created eWASM contracts (e.g., bug fixing).
-
-EthSema can translate existing EVM bytecode to eWASM smart contracts which can be executed in the Ethereum 2.0 ecosystem. To evaluate whether the generated eWASM contracts are in consistent with the original EVM contracts, we download their real-world transactions from the Ethereum blockchain, replay them on our testnet, and compare the traces of the EVM transactions and eWASM transactions. The experimental demonstrate that EthSema can ensure the semantic correctness of the converted eWASM contracts. 
-
 ## Comparison with other machine code to LLVM bitcode lifters
 
 | Tool                                                 | Bytecode | CFG       | EEI       | ECI       | Hardness |
@@ -19,49 +11,6 @@ EthSema can translate existing EVM bytecode to eWASM smart contracts which can b
 | [evm2wasm](https://github.com/ewasm/evm2wasm)        | yse      | incorrect | partial   | incorrect | no       |
 | [EVMJIT](https://github.com/ethereum/evmjit)         | yes      | partially | incorrect | incorrect | no       |
 | EthSema                                              | yes      | fully     | fully     | fully     | yes      |
-
-- The binary translators, evm2wasm and EVMJIT target on lifting EVM bytecode to eWASM bytecode, but their lifted semantic from bytecode is incomplete, thus failing to support R1. 
-  - evm2wasm [34] follows a template-based strategy to generate eWASM contracts according to a set of patterns. However, our experiments show that it only generates a WebAssembly template without filling any logic code. 
-  - EVMJIT [9] aims to lift EVM bytecode to LLVM IR [52], however, it fails to lift the basic blocks that contain indirect jumps because their destinations are determined at runtime. 
-  - Moreover, neither evm2wasm nor EVMJIT fully support EEI and ECI, thus failing to support R2.
-- tools like Solang [44] and SOLL [64] need the source code of smart contracts, but most of deployed contracts are closed-source.
-  - Moreover, they only support some basic grammar like if-else-then branches without handling advanced features such as inline assembly and library contracts, and they just partially follow ECI so that smart contracts cannot initiate themselves during deployment. Hence, they fail to support R1 and R2
-
-## Current Status 
-
-- **RQ1: Effectivess**
-
-**Real-world Benchmark:** We collect 1,983 real-world EVM bytecode from [Etherscan](https://etherscan.io/). The below figure shows the profile of each smart contract, where the x-axis is the Solidity version and the y-axis is the size of source code. These contracts have 741 LOC on average, and the largest one contains over 8,500 LOC. 
-
-<img src="https://github.com/ethsema/ethsema/blob/main/datasetProfile.png" alt="image-20220205143815196" style="zoom:50%;" />
-
-ETHSEMA can successfully convert EVM contracts into eWASM contracts and outperform the Solidity-based baselines.
-
-| Tool    | # Passed           | avg.Size / KB | avg.Time / ms |
-| ------- | ------------------ | ------------- | ------------- |
-| EthSema | **1,983 (100.0%)** | 271.6         | 4579.0        |
-| SOLL    | 18 (0.9%)          | 6.5           | 181.4         |
-| Solang  | 117 (5.9%)         | 11.5          | 2.8           |
-
-----
-
-
-
-- **RQ2: Correctness**
-
-**Real-world Benchmark:** we exclude some contracts because they depend on libc (standard C library, e.g., \_\_multi3, __shrl3) that the Ethereum 2.0 runtime does not support yet.  For each contract, we collect the fist 20 transactions sent to them. Eventually, we replay 12,048 transactions at our testbed for evaluation the correctness of ETHSEMA.
-
-We instrument EVM and eWASM runtime and replay 12,048 real-world transactions to compare the difference of the transactions traces, which covers most of operations that are associated with blockchain states, including storage accesses (*SLOAD, SSTORE*), external calls (CALL, STATICCALL, DELEGATECALL), emitting events (*LOG0-4*), contract suicide (SELFDESTRUCT) and returning values (*RETURN*).
-
-| Tool    | Contracts #1,165  | Transactions #12,048 | Score |
-| ------- | ----------------- | -------------------- | ----- |
-| EthSema | **1,125 (96.6%)** | 12,048 (100%)        | 0.99  |
-| SOLL    | 7 (0.60%)         | 15 (0.12%)           | 0.68  |
-| Solang  | 23 (1.97%)        | 42 (0.35%)           | 0.67  |
-
-ETHSEMA can ensure the semantic correctness of the converted eWASM contracts.
-
-**Note:** more experimental results will be public after this paper is accepted.
 
 ## Dependencies
 
@@ -140,7 +89,7 @@ contract reEntrancy {
 
 **geth + Hera**
 
-We build a testnet with a [geth](https://github.com/ewasm/go-ethereum) node (commit-0x6c61eba), which uses [Hera](https://github.com/ewasm/hera) (commit-0xa396507) as the eWASM VM and maintains the compatibility to EVM. The geth equipped with dual interpreters can execute smart contracts in EVM bytecode or eWASM bytecode on our testnet via uniform interfaces. To speed up the experiments, we use POA (Proof-of-Authority) rather than POW (Proof-of-Work) to avoid time-consuming mining and enforce blockchain data to stay in RAM instead of ROM for a lower I/O latency. 
+We build a testnet with a [geth](https://github.com/ewasm/go-ethereum) node (commit-0x6c61eba), which uses [Hera](https://github.com/ewasm/hera) (commit-0xa396507) as the eWASM VM and maintains the compatibility to EVM. 
 
 ```bash
 $ docker build -t localhost/client-go:ewasm .
