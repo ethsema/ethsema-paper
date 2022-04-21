@@ -76,6 +76,8 @@ ETHSEMA can ensure the semantic correctness of the converted eWASM contracts.
 
 ## Getting and building the code
 
+Download the pre-compiled binary via this [link](https://github.com/ethsema/ethsema-paper/releases/download/review/standalone-evmtrans)
+
 The source code and the building document will be released after our paper is accepted.
 
 Currently, we only public the standalone binary.
