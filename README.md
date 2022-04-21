@@ -143,7 +143,8 @@ contract reEntrancy {
 We build a testnet with a [geth](https://github.com/ewasm/go-ethereum) node (commit-0x6c61eba), which uses [Hera](https://github.com/ewasm/hera) (commit-0xa396507) as the eWASM VM and maintains the compatibility to EVM. The geth equipped with dual interpreters can execute smart contracts in EVM bytecode or eWASM bytecode on our testnet via uniform interfaces. To speed up the experiments, we use POA (Proof-of-Authority) rather than POW (Proof-of-Work) to avoid time-consuming mining and enforce blockchain data to stay in RAM instead of ROM for a lower I/O latency. 
 
 ```bash
-$ geth --networkid 66 --port 30321 --rpc --rpcaddr "0.0.0.0" --rpcport 8545 --rpccorsdomain "*" --allow-insecure-unlock --vm.ewasm="/path/to/libhera.so,evm1mode=reject" --rpcapi="db,eth,net,web3,personal,web3,miner" --miner.gasprice=0 --miner.gaslimit 90000000000  --mine --miner.threads 2 --dev console
+$ docker build -t localhost/client-go:ewasm .
+$ ./scripts/ewasm.sh
 ```
 
 **Note: ** At this time, we only use default version of Hera and Geth to for this start up. In our paper, we further extended Hera to support all Ethereum interfaces introduced from the latest “London” upgrade [62], such as CREATE2, SELFBALANCE, CHAINID, BASEFEE and COINBASE.  
