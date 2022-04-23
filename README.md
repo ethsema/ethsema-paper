@@ -85,8 +85,6 @@ The below code is an test script, which use an EVM smart contract to exploit the
 Requirement: Python3.8, Solcx, web3py
 
 ```python
-# author cswmchen
-# date   15-11-21
 # python -m runtimeTest.reentrancy --overwrite --langArgs="--check-reentrancy"
 import argparse
 from web3 import Web3
