@@ -1,4 +1,4 @@
-# EthSema - Ethereum Binary translator for eWASM
+# EthSema: An Accurate Binary Translation from Ethereum Smart Contracts to eWASM
 
 EthSema is a novel EVM-to-eWASM bytecode translator that can not only ensure the fidelity of translation but also fix commonly-seen vulnerabilities in smart contracts.It is non-trivial to develop ETHSEMA due to the challenges in lifting EVM bytecode to LLVM IR and handling the Ethereum Environment Interfaces (EEI) and Ethereum Contract Interfaces(ECI). 
 
