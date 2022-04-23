@@ -2,28 +2,10 @@
 
 EthSema is a novel EVM-to-eWASM bytecode translator that can not only ensure the fidelity of translation but also fix commonly-seen vulnerabilities in smart contracts.It is non-trivial to develop ETHSEMA due to the challenges in lifting EVM bytecode to LLVM IR and handling the Ethereum Environment Interfaces (EEI) and Ethereum Contract Interfaces(ECI). 
 
-## Comparison with other machine code to LLVM bitcode lifters
-
-| Tool                                                 | Bytecode | CFG       | EEI       | ECI       | Hardness |
-| ---------------------------------------------------- | -------- | --------- | --------- | --------- | -------- |
-| [SOLL](https://github.com/second-state/SOLL)         | no       | partial   | partial   | partial   | no       |
-| [Solang](https://github.com/hyperledger-labs/solang) | no       | partial   | partial   | partial   | no       |
-| [evm2wasm](https://github.com/ewasm/evm2wasm)        | yse      | incorrect | partial   | incorrect | no       |
-| [EVMJIT](https://github.com/ethereum/evmjit)         | yes      | partially | incorrect | incorrect | no       |
-| EthSema                                              | yes      | fully     | fully     | fully     | yes      |
-
-## Dependencies
-
-| Name   | Version      |
-| ------ | ------------ |
-| git    | Latest       |
-| CC     | gcc-7        |
-| CXX    | g++-7        |
-| cmake  | 3.20.0       |
-| LLVM   | 10.0         |
-| Ubuntu | 18.04, 20.04 |
 
 ## Getting and building the code
+
+It works well in Ubuntu 18.04, 20.04.
 
 Download the pre-compiled binary via this [link](https://github.com/ethsema/ethsema-paper/releases/download/review/standalone-evmtrans)
 
@@ -96,7 +78,7 @@ $ docker build -t localhost/client-go:ewasm .
 $ ./scripts/ewasm.sh
 ```
 
-**Note: ** At this time, we only use default version of Hera and Geth to for this start up. In our paper, we further extended Hera to support all Ethereum interfaces introduced from the latest “London” upgrade [62], such as CREATE2, SELFBALANCE, CHAINID, BASEFEE and COINBASE.  
+**Note:** At this time, we only use default version of Hera and Geth to for this start up. In our paper, we further extended Hera to support all Ethereum interfaces introduced from the latest “London” upgrade [62], such as CREATE2, SELFBALANCE, CHAINID, BASEFEE and COINBASE.  
 
 ## Run
 
